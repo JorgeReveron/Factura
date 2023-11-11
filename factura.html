@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Factura</title>
+  <style>
+    table {
+      border: 1px;
+    }
+  </style>
 </head>
 <body>
   <h1>Factura</h1>
@@ -20,11 +25,62 @@
     <!-- <input type="submit" value="Insertar"> -->
     <button onclick="show()">Insertar</button>
   </p>
+  <table>
+  </table>
 
   <script>
+    document.addEventListener("DOMContentLoaded", createTable());
     function show() {
       
     }
+
+    function createTable(){
+      let table = document.querySelector("table");
+      let thead = document.createElement("thead");
+      let tfoot = document.createElement("tfoot");
+      var headData = ["Concepto","Cantidad","Precio Unitario","Precio Total",""];
+      let footData = ["Subtotal","Tasa","Impuestos","Total"];
+      //var rows,columns,columnText;
+      for (let i = 0; i < 1; i++) {
+        var row = document.createElement("tr");
+        for (let j = 0; j < 5; j++) {
+          if (i == 0) {
+            var columns = document.createElement("th");
+            columns.textContent = headData[j];
+            row.appendChild(columns);
+          }
+          console.log(columns);
+        }
+        if (i == 0) {
+          thead.appendChild(row);
+        }
+        table.appendChild(thead);
+      }
+      table.appendChild(thead);
+      console.log(table);
+    }
+
+    function simple() {
+      let table = document.querySelector("table");
+      let thead = document.createElement("thead");
+      var headData = ["Concepto","Cantidad","Precio Unitario","Precio Total",""];
+      for (let i = 0; i < 1; i++) {
+        var row = document.createElement("tr");
+        for (let j = 0; j < 5; j++) {
+          if (i == 0) {
+          var columns = document.createElement("th");
+          columns.textContent = headData[j];
+          row.appendChild(columns);
+          }
+
+        }
+        if (i == 0) {
+        thead.appendChild(row);
+        table.appendChild(thead);
+        }
+      }
+    }
+
   </script>
 </body>
 </html>
