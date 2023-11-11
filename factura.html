@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Factura</title>
   <style>
-    table {
-      border: 1px;
+    table,th,tr,td {
+      border: 1px solid black;
+      border-radius: 2px;
     }
   </style>
 </head>
@@ -26,6 +27,7 @@
     <button onclick="show()">Insertar</button>
   </p>
   <table>
+    <!-- <td rowspan=""></td> -->
   </table>
 
   <script>
@@ -39,9 +41,9 @@
       let thead = document.createElement("thead");
       let tfoot = document.createElement("tfoot");
       var headData = ["Concepto","Cantidad","Precio Unitario","Precio Total",""];
-      let footData = ["Subtotal","Tasa","Impuestos","Total"];
+      let footData = ["Tasa","","Impuestos"];
       //var rows,columns,columnText;
-      for (let i = 0; i < 1; i++) {
+      for (let i = 0; i < 4; i++) {
         var row = document.createElement("tr");
         for (let j = 0; j < 5; j++) {
           if (i == 0) {
@@ -49,14 +51,47 @@
             columns.textContent = headData[j];
             row.appendChild(columns);
           }
-          console.log(columns);
+          if (i == 1 && j == 0) {
+            var columns = document.createElement("td");
+            columns.textContent = "Subtotal";
+            columns.setAttribute("colspan", "3");
+            row.appendChild(columns);
+          }else if (i == 1 && j !=0){
+            var columns = document.createElement("td");
+            row.appendChild(columns);
+            if (j == 2){
+              j = 5;
+            }
+          }
+          if (i == 2) {
+            var columns = document.createElement("td");
+            columns.textContent = footData[j];
+            row.appendChild(columns);
+          }
+          if(i == 3 && j == 0) {
+            var columns = document.createElement("td");
+            columns.textContent = "TOTAL";
+            columns.setAttribute("colspan", "3");
+            row.appendChild(columns);
+          }else if (i == 3 && j !=0){
+            var columns = document.createElement("td");
+            row.appendChild(columns);
+            if (j == 2){
+              j = 5;
+            }
+          }
         }
         if (i == 0) {
           thead.appendChild(row);
+          table.appendChild(thead);
         }
-        table.appendChild(thead);
+        if (i > 0) {
+          tfoot.appendChild(row);
+          table.appendChild(tfoot);
+        }
+        
       }
-      table.appendChild(thead);
+      //table.appendChild(thead);
       console.log(table);
     }
 
