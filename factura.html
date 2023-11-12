@@ -5,9 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Factura</title>
   <style>
-    table,th,tr,td {
+    table {
       border: 1px solid black;
       border-radius: 2px;
+      border-collapse: collapse;
+    }
+    th,tr,td {
+      border: 1px solid black;
+      border-radius: 2px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    tbody {
+      text-align: right;
+    }
+    tfoot {
+      text-align: right;
     }
   </style>
 </head>
@@ -23,58 +36,66 @@
     Precio:<input type="number" name="precio">€
   </p>
   <p>
-    <!-- <input type="submit" value="Insertar"> -->
-    <button onclick="show()">Insertar</button>
+    <button onclick="insertData()">Insertar</button>
   </p>
-  <table>
-    <!-- <td rowspan=""></td> -->
-  </table>
-
+  <table></table>
+  <p>
+    <button class="5" onclick="calculateTax(this)">Tasa 5%</button>
+    <button class="15" onclick="calculateTax(this)">Tasa 15%</button>
+    <button class="30" onclick="calculateTax(this)">Tasa 30%</button>
+  </p>
   <script>
     document.addEventListener("DOMContentLoaded", createTable());
     function show() {
-      
+      let concepto = document.querySelector("[name='concepto']").value;
+      console.log(concepto);
     }
 
     function createTable(){
       let table = document.querySelector("table");
       let thead = document.createElement("thead");
       let tfoot = document.createElement("tfoot");
-      var headData = ["Concepto","Cantidad","Precio Unitario","Precio Total",""];
-      let footData = ["Tasa","","Impuestos"];
-      //var rows,columns,columnText;
+      let headData = ["Concepto","Cantidad","Precio Unitario","Precio Total",""];
+      let footData = ["Tasa:"];
+      footData[2] = ["Impuestos:"];
+      var rows,columns;
       for (let i = 0; i < 4; i++) {
-        var row = document.createElement("tr");
+        row = document.createElement("tr");
         for (let j = 0; j < 5; j++) {
           if (i == 0) {
-            var columns = document.createElement("th");
+            columns = document.createElement("th");
             columns.textContent = headData[j];
             row.appendChild(columns);
           }
           if (i == 1 && j == 0) {
-            var columns = document.createElement("td");
+            columns = document.createElement("td");
             columns.textContent = "Subtotal";
             columns.setAttribute("colspan", "3");
             row.appendChild(columns);
           }else if (i == 1 && j !=0){
-            var columns = document.createElement("td");
+            columns = document.createElement("td");
             row.appendChild(columns);
             if (j == 2){
               j = 5;
             }
           }
-          if (i == 2) {
-            var columns = document.createElement("td");
+          if (i == 2 && j != 1) {
+            columns = document.createElement("td");
             columns.textContent = footData[j];
             row.appendChild(columns);
           }
+          if (i == 2 && j == 1) {
+            columns = document.createElement("td");
+            columns.setAttribute("class","tax");
+            row.appendChild(columns);
+          }
           if(i == 3 && j == 0) {
-            var columns = document.createElement("td");
+            columns = document.createElement("td");
             columns.textContent = "TOTAL";
             columns.setAttribute("colspan", "3");
             row.appendChild(columns);
           }else if (i == 3 && j !=0){
-            var columns = document.createElement("td");
+            columns = document.createElement("td");
             row.appendChild(columns);
             if (j == 2){
               j = 5;
@@ -91,28 +112,48 @@
         }
         
       }
-      //table.appendChild(thead);
-      console.log(table);
     }
 
-    function simple() {
+    function insertData() {
+      let concept = document.querySelector("[name='concepto']").value;
+      let amount = document.querySelector("[name='cantidad']").value;
+      let price = document.querySelector("[name='precio']").value;
+      let totalPrice = amount*price;
+      let tbody = document.createElement("tbody");
       let table = document.querySelector("table");
-      let thead = document.createElement("thead");
-      var headData = ["Concepto","Cantidad","Precio Unitario","Precio Total",""];
+      let data = [concept,amount,price,totalPrice,"X"];
+      var row,columns;
       for (let i = 0; i < 1; i++) {
-        var row = document.createElement("tr");
+        row = document.createElement("tr");
         for (let j = 0; j < 5; j++) {
-          if (i == 0) {
-          var columns = document.createElement("th");
-          columns.textContent = headData[j];
-          row.appendChild(columns);
+          columns = document.createElement("td");
+          if (j == 2 || j == 3) {
+            columns.textContent = data[j]+"€";
+          }else{
+            columns.textContent = data[j]
           }
-
+          row.appendChild(columns);
         }
-        if (i == 0) {
-        thead.appendChild(row);
-        table.appendChild(thead);
-        }
+        tbody.appendChild(row);
+        table.appendChild(tbody);
+        
+      }
+    }
+    
+    function calculateTax(button) {
+      let taxCell;
+      if (button.className == 5) {
+        taxCell = document.getElementsByClassName("tax");
+        let prueba = document.querySelector("[class='tax']").textContent;
+        // prueba = "5%";
+        // console.log(prueba);
+        // console.log(taxCell);
+        // taxCell.value = "5%";
+        // taxCell.textContent = "5%";
+      }else if (button.className == 15) {
+        console.log(15);
+      }else {
+        console.log(30);
       }
     }
 
