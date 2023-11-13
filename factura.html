@@ -87,6 +87,7 @@
           if (i == 2 && j == 1) {
             columns = document.createElement("td");
             columns.setAttribute("class","tax");
+            columns.textContent = "30%";
             row.appendChild(columns);
           }
           if(i == 3 && j == 0) {
@@ -129,8 +130,11 @@
           columns = document.createElement("td");
           if (j == 2 || j == 3) {
             columns.textContent = data[j]+"€";
+          }else if (j == 4){
+            columns.textContent = data[j];
+            columns.onclick = () => row.remove();
           }else{
-            columns.textContent = data[j]
+            columns.textContent = data[j];
           }
           row.appendChild(columns);
         }
@@ -141,19 +145,13 @@
     }
     
     function calculateTax(button) {
-      let taxCell;
+      var taxCell = document.getElementsByClassName("tax");
       if (button.className == 5) {
-        taxCell = document.getElementsByClassName("tax");
-        let prueba = document.querySelector("[class='tax']").textContent;
-        // prueba = "5%";
-        // console.log(prueba);
-        // console.log(taxCell);
-        // taxCell.value = "5%";
-        // taxCell.textContent = "5%";
+        taxCell[0].textContent = "5%";
       }else if (button.className == 15) {
-        console.log(15);
+        taxCell[0].textContent = "15%";
       }else {
-        console.log(30);
+        taxCell[0].textContent = "30%";
       }
     }
 
