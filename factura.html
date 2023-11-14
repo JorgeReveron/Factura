@@ -72,22 +72,31 @@
             columns.textContent = "Subtotal";
             columns.setAttribute("colspan", "3");
             row.appendChild(columns);
-          }else if (i == 1 && j !=0){
+          }else if (i == 1 && j == 1){
             columns = document.createElement("td");
+            columns.setAttribute("id","subtotal");
+            columns.textContent = 0.00 + "€";
             row.appendChild(columns);
             if (j == 2){
+              columns = document.createElement("td");
+              row.appendChild(columns);
               j = 5;
             }
           }
-          if (i == 2 && j != 1) {
+          if (i == 2 && j != 1 && j != 3) {
             columns = document.createElement("td");
             columns.textContent = footData[j];
             row.appendChild(columns);
           }
           if (i == 2 && j == 1) {
             columns = document.createElement("td");
-            columns.setAttribute("class","tax");
+            columns.setAttribute("class","taxpercent");
             columns.textContent = "30%";
+            row.appendChild(columns);
+          }else if( i == 2 && j == 3){
+            columns = document.createElement("td");
+            columns.setAttribute("id","tax");
+            columns.textContent = 0.00 + "€";
             row.appendChild(columns);
           }
           if(i == 3 && j == 0) {
@@ -95,7 +104,12 @@
             columns.textContent = "TOTAL";
             columns.setAttribute("colspan", "3");
             row.appendChild(columns);
-          }else if (i == 3 && j !=0){
+          }else if(i == 3 && j == 1) {
+            columns = document.createElement("td");
+            columns.setAttribute("id", "total");
+            columns.textContent = 0.00 + "€";
+            row.appendChild(columns);
+          }else if (i == 3 && j !=0 && j != 1){
             columns = document.createElement("td");
             row.appendChild(columns);
             if (j == 2){
@@ -119,7 +133,7 @@
       let concept = document.querySelector("[name='concepto']").value;
       let amount = document.querySelector("[name='cantidad']").value;
       let price = document.querySelector("[name='precio']").value;
-      let totalPrice = amount*price;
+      let totalPrice = parseFloat(amount*price).toFixed(2);
       let tbody = document.createElement("tbody");
       let table = document.querySelector("table");
       let data = [concept,amount,price,totalPrice,"X"];
@@ -128,7 +142,10 @@
         row = document.createElement("tr");
         for (let j = 0; j < 5; j++) {
           columns = document.createElement("td");
-          if (j == 2 || j == 3) {
+          if (j == 2) {
+            columns.textContent = data[j]+"€";
+          }else if(j == 3) {
+            columns.setAttribute("id","preciototal");
             columns.textContent = data[j]+"€";
           }else if (j == 4){
             columns.textContent = data[j];
@@ -143,11 +160,23 @@
         
       }
     }
+
+    function calculateSubtotal() {
+      let totalPrice
+    }
     
     function calculateTax(button) {
-      var taxCell = document.getElementsByClassName("tax");
+      var taxCell = document.getElementsByClassName("taxpercent");
+      // let th = document.querySelectorAll("th");
+      // let priceCells = th[3];
+      // let prueba = document.querySelectorAll("tr");
+      // let prueba2 = document.querySelectorAll("td");
+      // let subtotal = prueba2[1];
+      // let impuestos = prueba2[6];
+      // let totalPrice = prueba2[9];
       if (button.className == 5) {
         taxCell[0].textContent = "5%";
+        // console.log(subtotal);
       }else if (button.className == 15) {
         taxCell[0].textContent = "15%";
       }else {
