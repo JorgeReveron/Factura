@@ -5,22 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Factura</title>
   <style>
+    p {
+      text-align: center;
+    }
     table {
-      border: 1px solid black;
       border-radius: 2px;
       border-collapse: collapse;
+      margin-left: auto;
+      margin-right: auto;
     }
     th,tr,td {
-      border: 1px solid black;
+      border: 1px solid blue;
       border-radius: 2px;
       padding-left: 10px;
       padding-right: 10px;
     }
+    thead {
+      background-color: blue;
+      color: white;
+    }
     tbody {
       text-align: right;
+      
     }
     tfoot {
       text-align: right;
+      background-color: LightBlue;
+    }
+    tbody > tr:nth-child(odd){
+      background-color: lightcyan;
+    }
+    .taxpercent {
+      color: red;
+      font-weight: bold;
+    }
+    #total, #segundalinea, #subtotaltexto, #totaltexto{
+      font-weight: bold;
     }
   </style>
 </head>
@@ -45,82 +65,101 @@
     <button class="30" onclick="calculateTax(this)">Tasa 30%</button>
   </p>
   <script>
+    // Evento para cuando cargue la pagina se cree la tabla
     document.addEventListener("DOMContentLoaded", createTable());
-    function show() {
-      let concepto = document.querySelector("[name='concepto']").value;
-      console.log(concepto);
-    }
-
+    // Funcion para crear la tabla
     function createTable(){
+      var buttonTax = 0;
+      var numberTaxCell = 0;
       let table = document.querySelector("table");
       let thead = document.createElement("thead");
+      let tbody = document.createElement("tbody");
       let tfoot = document.createElement("tfoot");
       let headData = ["Concepto","Cantidad","Precio Unitario","Precio Total",""];
       let footData = ["Tasa:"];
       footData[2] = ["Impuestos:"];
       var rows,columns;
+      // Bucle para las lineas de la tabla
       for (let i = 0; i < 4; i++) {
+        // Creamos la linea de la tabla
         row = document.createElement("tr");
+        // Bucle para las columnas de la tabla
         for (let j = 0; j < 5; j++) {
+          // Condicional para las columnas del thead
           if (i == 0) {
             columns = document.createElement("th");
             columns.textContent = headData[j];
             row.appendChild(columns);
           }
+          // Condicional para el Subtotal, para poder alargarlo
           if (i == 1 && j == 0) {
             columns = document.createElement("td");
             columns.textContent = "Subtotal";
             columns.setAttribute("colspan", "3");
+            columns.setAttribute("id", "subtotaltexto");
             row.appendChild(columns);
+            // Condicional para la columna del precio del Subtotal
           }else if (i == 1 && j == 1){
             columns = document.createElement("td");
             columns.setAttribute("id","subtotal");
-            columns.textContent = 0.00 + "€";
+            columns.textContent = (0).toFixed(2) + "€";
             row.appendChild(columns);
-            if (j == 2){
+          // Condicional para la celda en blanco
+          }else if (i== 1 && j == 2){
               columns = document.createElement("td");
               row.appendChild(columns);
               j = 5;
-            }
           }
+          // Condicional para la segunda fila del Tfoot, para lo que es solo texto
           if (i == 2 && j != 1 && j != 3) {
             columns = document.createElement("td");
+            columns.setAttribute("id", "segundalinea");
             columns.textContent = footData[j];
             row.appendChild(columns);
           }
+          // Condicional para el porcentaje de impuestos
           if (i == 2 && j == 1) {
             columns = document.createElement("td");
             columns.setAttribute("class","taxpercent");
-            columns.textContent = "30%";
+            columns.textContent = "5%";
             row.appendChild(columns);
+          // Condicional para el precio de los impuestos
           }else if( i == 2 && j == 3){
             columns = document.createElement("td");
             columns.setAttribute("id","tax");
-            columns.textContent = 0.00 + "€";
+            columns.textContent = (0).toFixed(2) + "€";
             row.appendChild(columns);
           }
+          // Condicional para el Total, para alargarlo
           if(i == 3 && j == 0) {
             columns = document.createElement("td");
             columns.textContent = "TOTAL";
             columns.setAttribute("colspan", "3");
+            columns.setAttribute("id", "totaltexto");
             row.appendChild(columns);
+          // Condicional para el precio total
           }else if(i == 3 && j == 1) {
             columns = document.createElement("td");
             columns.setAttribute("id", "total");
-            columns.textContent = 0.00 + "€";
+            columns.textContent = (0).toFixed(2) + "€";
             row.appendChild(columns);
+          // Condicional para el cuadro en blanco de la ultima linea
           }else if (i == 3 && j !=0 && j != 1){
             columns = document.createElement("td");
             row.appendChild(columns);
+          // Condicional para que se acabe el bucle
             if (j == 2){
               j = 5;
             }
           }
         }
+        // Condicional para añadir la linea del Thead al Thead, el Thead y el Tbody a la tabla
         if (i == 0) {
           thead.appendChild(row);
           table.appendChild(thead);
+          table.appendChild(tbody);
         }
+        // Condicional para añadir la linea del Tfoot al Tfoot y el Tfoot a la tabla
         if (i > 0) {
           tfoot.appendChild(row);
           table.appendChild(tfoot);
@@ -129,59 +168,96 @@
       }
     }
 
+    // Funcion para insertar Lineas
     function insertData() {
+      // Variable para conseguir el valor de los inputs
       let concept = document.querySelector("[name='concepto']").value;
       let amount = document.querySelector("[name='cantidad']").value;
       let price = document.querySelector("[name='precio']").value;
+      // Variable donde se calcula el total de la linea (cantidad*precio)
       let totalPrice = parseFloat(amount*price).toFixed(2);
-      let tbody = document.createElement("tbody");
-      let table = document.querySelector("table");
+      let tbody = document.querySelector("tbody");
       let data = [concept,amount,price,totalPrice,"X"];
       var row,columns;
+      // Bucle para las lineas de la tabla
       for (let i = 0; i < 1; i++) {
         row = document.createElement("tr");
+        // Bucle para las columnas de la tabla
         for (let j = 0; j < 5; j++) {
           columns = document.createElement("td");
+          // Condicional para que se vea el precio individual en la tabla 
           if (j == 2) {
-            columns.textContent = data[j]+"€";
+            columns.textContent = parseFloat(data[j]).toFixed(2)+"€";
+          // Condicional para que se vea la variable totalPrice
           }else if(j == 3) {
             columns.setAttribute("id","preciototal");
             columns.textContent = data[j]+"€";
+          // Condicional para la X
           }else if (j == 4){
             columns.textContent = data[j];
-            columns.onclick = () => row.remove();
+            columns.onclick = () => {
+              row.remove();
+              calculateSubtotal();
+              calculateTotal();
+              calculateTax(buttonTax);
+            };
+          // Condicional para que rellene la linea
           }else{
             columns.textContent = data[j];
           }
+          // Insertamos las columnas en la linea
           row.appendChild(columns);
         }
+        // Insertamos las lineas en el Tbody
         tbody.appendChild(row);
-        table.appendChild(tbody);
-        
       }
+      // Variable para conseguir el contenido de texto de la celda del porcentaje de impuesto, en forma numerica
+      numberTaxCell = parseInt(document.getElementsByClassName("taxpercent")[0].textContent);
+      // variable para conseguir el boton del porcentaje que haya y poder llamar a la funciona calculateTax()
+      buttonTax = document.querySelector("[class='"+numberTaxCell+"']");
+      calculateSubtotal();
+      calculateTotal();
+      calculateTax(buttonTax);
     }
-
+    // Funcion para calcular el Subtotal
     function calculateSubtotal() {
-      let totalPrice
+      let totalPriceColumn = document.querySelectorAll("#preciototal");
+      var subtotalCell = document.querySelector("#subtotal");
+      var calculatedSub = 0;
+      // Bucle para cada linea de la columna Precio Total
+      totalPriceColumn.forEach(element => {
+        calculatedSub  += parseFloat(element.textContent);
+      });
+      subtotalCell.textContent = calculatedSub.toFixed(2) + "€";
     }
-    
+    // Funcion para calcular el Total
+    function calculateTotal() {
+      let total = document.querySelector("#total");
+      let totalCalculated = parseFloat(subtotal.textContent) + parseFloat(tax.textContent);
+      total.textContent = totalCalculated.toFixed(2) + "€";
+      
+    }
+    // Funcion para calcular los impuestos
     function calculateTax(button) {
       var taxCell = document.getElementsByClassName("taxpercent");
-      // let th = document.querySelectorAll("th");
-      // let priceCells = th[3];
-      // let prueba = document.querySelectorAll("tr");
-      // let prueba2 = document.querySelectorAll("td");
-      // let subtotal = prueba2[1];
-      // let impuestos = prueba2[6];
-      // let totalPrice = prueba2[9];
+      var taxPrice = document.querySelector("#tax");
+      // Condicional para cuando el boton seleccionado sea 5%
       if (button.className == 5) {
         taxCell[0].textContent = "5%";
-        // console.log(subtotal);
+        taxPrice.textContent = (parseFloat(subtotal.textContent)*5/100).toFixed(2) + "€";
+        calculateTotal();
+      // Condicional para cuando el boton seleccionado sea 15%
       }else if (button.className == 15) {
         taxCell[0].textContent = "15%";
+        taxPrice.textContent = (parseFloat(subtotal.textContent)*15/100).toFixed(2) + "€";
+        calculateTotal();
+      // Condicional para cuando el boton seleccionado sea 30%
       }else {
         taxCell[0].textContent = "30%";
+        taxPrice.textContent = (parseFloat(subtotal.textContent)*30/100).toFixed(2) + "€";
+        calculateTotal();
       }
+      calculateTotal();
     }
 
   </script>
